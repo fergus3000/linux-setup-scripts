@@ -19,4 +19,24 @@ sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 minikube start
 
 # Enable Minikube to start at boot
-sudo minikube service enable
+# Create Minikube systemd service file if it does not exist
+if [ ! -f /etc/systemd/system/minikube.service ]; then
+  sudo tee /etc/systemd/system/minikube.service <<EOF
+[Unit]
+Description=minikube
+After=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/bin/minikube start
+ExecStop=/usr/local/bin/minikube stop
+
+[Install]
+WantedBy=multi-user.target
+EOF
+fi
+
+# Enable Minikube to start at boot
+sudo systemctl daemon-reload
+sudo systemctl enable minikube.service
