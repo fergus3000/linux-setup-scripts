@@ -23,20 +23,25 @@ minikube start
 if [ ! -f /etc/systemd/system/minikube.service ]; then
   sudo tee /etc/systemd/system/minikube.service <<EOF
 [Unit]
-Description=minikube
+Description=Startup minikube service
 After=docker.service
 
 [Service]
 Type=oneshot
-RemainAfterExit=yes
-ExecStart=/usr/local/bin/minikube start
-ExecStop=/usr/local/bin/minikube stop
+ExecStart=/usr/bin/minikube start
+RemainAfterExit=true
+ExecStop=/usr/bin/minikube stop
+StandardOutput=journal
+User=$USER
+Group=$USER
 
 [Install]
 WantedBy=multi-user.target
 EOF
 fi
-
+# Get the service to start with systemctl
+sudo systemctl daemon-reload
+sudo systemctl enable minikube.service
 # Enable Minikube to start at boot
 sudo systemctl daemon-reload
 sudo systemctl enable minikube.service
