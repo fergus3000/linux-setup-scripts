@@ -20,3 +20,6 @@ sudo apt install docker-ce
 
 # Enable Docker to start at boot
 sudo systemctl enable docker
+
+# Add current user to docker group
+sudo usermod -aG docker $USER
