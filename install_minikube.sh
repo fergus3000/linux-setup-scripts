@@ -39,9 +39,7 @@ Group=$USER
 WantedBy=multi-user.target
 EOF
 fi
-# Get the service to start with systemctl
-sudo systemctl daemon-reload
-sudo systemctl enable minikube.service
+
 # Enable Minikube to start at boot
 sudo systemctl daemon-reload
 sudo systemctl enable minikube.service
